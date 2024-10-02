@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Instagram Login</title>
+    <link rel="stylesheet" href="login.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Instagram Login</h1>
+        <form id="loginForm">
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" name="username" id="username" placeholder="Eg: psr_07">
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" name="password" id="password" placeholder="Enter Password">
+            </div>
+            <button id="submit" type="button" class="btn">Login</button>
+        </form>
+        <div class="links">
+            <a href="#" target="_self">Forgot Password</a>
+            <a href="./register.html">Register here</a>
+        </div>
+    </div>
+    <script>
+        document.getElementById("submit").addEventListener("click", async (event) => {
+            event.preventDefault();
+            
+            const username = document.getElementById("username").value;
+            const userpassword = document.getElementById("password").value;
+
+            if (!username || !userpassword) {
+                alert("Please fill in both fields.");
+                return;
+            }
+
+            const usedata = {
+                username: username,
+                password: userpassword
+            };
+
+            try {
+                const response = await fetch("http://localhost:8081/login", {
+                    method: "POST",
+                    credentials: "include",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(usedata)
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    alert(`Error: ${errorData.msg}`);
+                    return;
+                }
+
+                const data = await response.json();
+                console.log(data);
+                window.location.href = "http://localhost:5500/client/Index.html";
+
+            } catch (error) {
+                console.log(error.message);
+                alert("An error occurred. Please try again.");
+            }
+        });
+    </script>
+</body>
+</html>

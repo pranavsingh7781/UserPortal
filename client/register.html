@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Instagram Signup</title>
+    <link rel="stylesheet" href="register.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Instagram Signup</h1>
+        <form novalidate>
+            <div class="form-group">
+                <label for="name">Name</label>
+                <input type="text" id="name" name="name" placeholder="Enter your Name">
+            </div>
+            <div class="form-group">
+                <label for="username">User Name</label>
+                <input type="text" name="username" id="username" placeholder="Choose your user name">
+            </div>
+            <div class="form-group">
+                <label for="email">Enter Email</label>
+                <input type="email" name="email" id="email" placeholder="Enter your email">
+            </div>
+            <div class="form-group">
+                <label for="password">Choose Password</label>
+                <input type="password" name="password" id="password" placeholder="Choose your Password">
+            </div>
+            <div class="form-group">
+                <label for="bio">Enter Bio</label>
+                <input type="text" name="bio" id="bio" placeholder="Write Your BIO">
+            </div>
+            <button class="btn" type="button" id="submit">Sign Up</button>
+        </form>
+        <div class="links">
+            <a href="./Login.html">Already have an account?</a>
+        </div>
+    </div>
+    <script>
+        const formSubmit = document.getElementById("submit");
+        formSubmit.addEventListener("click", async (event) => {
+            event.preventDefault();
+            
+            // Get form values
+            const username = document.getElementById("username").value;
+            const useremail = document.getElementById("email").value;
+            const userpassword = document.getElementById("password").value;
+            const nameofuser = document.getElementById("name").value;
+            const userbio = document.getElementById("bio").value;
+
+            // Check if all fields are filled
+            if (!username || !useremail || !userpassword || !nameofuser || !userbio) {  
+                alert("All input fields are required");
+                return; 
+            }
+
+            // Prepare data to send
+            const userdata = {
+                name: nameofuser,
+                email: useremail,
+                bio: userbio,
+                password: userpassword,
+                username: username
+            };
+
+            try {
+                // Send data to backend
+                const resp = await fetch("http://localhost:8081/signup", {
+                    method: "POST",
+                    headers: { "content-type": "application/json" },
+                    body: JSON.stringify(userdata),
+                });
+
+                // Parse JSON response
+                const data = await resp.json();
+
+                // Handle response
+                if (resp.ok) {
+                    console.log("Signup successful:", data);
+                    window.location.href = "http://localhost:5500/client/Login.html";
+                } else {
+                    console.error("Signup failed:", data.msg);
+                    alert("Signup failed: " + data.msg);
+                }
+            } catch (error) {
+                console.error("Error:", error.message);
+                alert("An error occurred. Please try again.");
+            }
+        });
+    </script>
+</body>
+</html>

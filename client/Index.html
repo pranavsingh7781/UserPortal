@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="Index.css">
+</head>
+<body>
+    <div class="container">
+        <img class="profile-image" src="https://www.simplilearn.com/ice9/free_resources_article_thumb/what_is_image_Processing.jpg" alt="">
+        <h2 id="username" class="username">John Doe</h2>
+        <p id="userbio" class="bio">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Assumenda, enim.</p>
+        <p id="useremail" class="follower-count">Email: getting</p>
+        <p class="follower-count">Followers: 1000</p>
+    </div>
+    <script>
+        const userdata = async () => {
+            try {
+                const response = await fetch("http://localhost:8081", {
+                    method: "GET",
+                    credentials: "include"
+                });
+
+                if (response.status === 401) {
+                    // Unauthorized, redirect to login
+                    window.location.href = "http://localhost:5500/client/Login.html";
+                    return;
+                }
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+
+                const { data } = await response.json();
+                const username = document.getElementById("username");
+                const useremail = document.getElementById("useremail");
+                const userbio = document.getElementById("userbio");
+
+                username.innerText = data.username;
+                useremail.innerText = `Email: ${data.email}`;
+                userbio.innerText = `Bio: ${data.bio}`;
+                
+            } catch (error) {
+                console.log(error.message);
+                window.location.href = "http://localhost:5500/client/Login.html";
+            }
+        };
+
+        // Call userdata function to load user data
+        userdata();
+    </script>
+</body>
+</html>
